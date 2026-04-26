@@ -40,10 +40,10 @@ param embeddingModelVersion string = '1'
 param embeddingModelCapacity int = 30
 
 @description('Chat model name')
-param chatModelName string = 'gpt-4o-mini'
+param chatModelName string = 'gpt-4o'
 
 @description('Chat model version')
-param chatModelVersion string = '2024-07-18'
+param chatModelVersion string = '2024-11-20'
 
 @description('Chat model capacity (1K TPM per unit)')
 @minValue(1)
@@ -65,7 +65,7 @@ var names = {
   storage: take('${toLower(resourcePrefix)}st${uniqueSuffix}', 24)
   blobContainer: 'product-manuals'
   embeddingDeployment: 'text-embedding-3-large'
-  chatDeployment: 'gpt-4o-mini'
+  chatDeployment: 'gpt-4o'
 }
 
 // -----------------------------------------------
@@ -255,7 +255,7 @@ resource chatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-1
     model: {
       format: 'OpenAI'
       name: chatModelName
-      version: chatModelVersion
+      version: '2024-11-20'
     }
     raiPolicyName: 'Microsoft.Default'
   }
@@ -298,7 +298,7 @@ resource aiServicesChatDeployment 'Microsoft.CognitiveServices/accounts/deployme
     model: {
       format: 'OpenAI'
       name: chatModelName
-      version: chatModelVersion
+      version: '2024-11-20'
     }
     raiPolicyName: 'Microsoft.Default'
   }
