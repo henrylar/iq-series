@@ -4,7 +4,7 @@ This folder contains the infrastructure-as-code to deploy all Azure resources ne
 
 ## One-Click Deploy
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/iq-series/deploytoazure)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhenrylar%2Fiq-series%2Fmain%2Finfra%2Fazuredeploy.json)
 
 Click the button above to deploy directly from the Azure Portal. You'll be prompted for:
 - **User Object ID** — run `az ad signed-in-user show --query id -o tsv` to get yours

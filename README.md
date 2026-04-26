@@ -55,7 +55,7 @@ Episode folders also include Jupyter notebook cookbooks with hands-on, step-by-s
 
 ### 1. Deploy to Azure
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/iq-series/deploytoazure)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhenrylar%2Fiq-series%2Fmain%2Finfra%2Fazuredeploy.json)
 
 Click the button above to deploy all required Azure resources: AI Search, Azure OpenAI, a Foundry project, Azure Blob Storage, and seeded sample data with a ready-to-use knowledge base.
 
