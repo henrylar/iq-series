@@ -13,7 +13,7 @@ param userObjectId string
 param resourcePrefix string = 'iqseries'
 
 @description('Azure region — must support agentic retrieval (see https://learn.microsoft.com/azure/search/search-region-support)')
-param location string = 'eastus2'
+param location string = 'swedencentral'
 
 @description('AI Search SKU')
 @allowed(['basic', 'standard', 'standard2', 'standard3'])
@@ -260,7 +260,7 @@ resource chatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-1
     raiPolicyName: 'Microsoft.Default'
   }
   sku: {
-    name: 'GlobalStandard'
+    name: 'Standard'
     capacity: chatModelCapacity
   }
   dependsOn: [
@@ -303,7 +303,7 @@ resource aiServicesChatDeployment 'Microsoft.CognitiveServices/accounts/deployme
     raiPolicyName: 'Microsoft.Default'
   }
   sku: {
-    name: 'GlobalStandard'
+    name: 'Standard'
     capacity: chatModelCapacity
   }
   dependsOn: [

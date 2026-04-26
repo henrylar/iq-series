@@ -17,7 +17,7 @@
     },
     "resourcePrefix": {
       "type": "string",
-      "defaultValue": "iqseries",
+      "defaultValue": "iqser",
       "metadata": {
         "description": "Resource name prefix"
       }
@@ -90,7 +90,7 @@
     },
     "chatModelName": {
       "type": "string",
-      "defaultValue": "gpt-4o-mini",
+      "defaultValue": "gpt-4o",
       "metadata": {
         "description": "Chat model name"
       }
@@ -131,7 +131,7 @@
       "storage": "[format('{0}stor{1}', parameters('resourcePrefix'), variables('uniqueSuffix'))]",
       "blobContainer": "product-manuals",
       "embeddingDeployment": "text-embedding-3-large",
-      "chatDeployment": "gpt-4o-mini"
+      "chatDeployment": "gpt-4o"
     },
     "roles": {
       "searchServiceContributor": "7ca78c08-252a-4471-8644-bb5ff32d4ba0",
@@ -310,7 +310,7 @@
         "model": {
           "format": "OpenAI",
           "name": "[parameters('chatModelName')]",
-          "version": "[parameters('chatModelVersion')]"
+          "version": "2024-11-20"
         },
         "raiPolicyName": "Microsoft.Default"
       },
@@ -351,7 +351,7 @@
         "model": {
           "format": "OpenAI",
           "name": "[parameters('chatModelName')]",
-          "version": "[parameters('chatModelVersion')]"
+          "version": "2024-11-20"
         },
         "raiPolicyName": "Microsoft.Default"
       },

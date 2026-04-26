@@ -2,8 +2,11 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "userObjectId": {
+      "value": null
+    },
     "resourcePrefix": {
-      "value": "iqseries"
+      "value": "iqser"
     },
     "location": {
       "value": "swedencentral"
@@ -27,13 +30,16 @@
       "value": 30
     },
     "chatModelName": {
-      "value": "gpt-4o-mini"
+      "value": "gpt-4o"
     },
     "chatModelVersion": {
-      "value": "2024-07-18"
+      "value": "2024-11-20"
     },
     "chatModelCapacity": {
       "value": 30
+    },
+    "seedData": {
+      "value": true
     }
   }
 }

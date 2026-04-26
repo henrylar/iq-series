@@ -13,9 +13,10 @@ Click the button above to deploy directly from the Azure Portal. You'll be promp
 
 > **⚠️ Troubleshooting: Deployment script failed?**
 >
-> Some Azure tenants enforce policies that block key-based access on storage accounts. The data seeding step uses an [Azure deployment script](https://learn.microsoft.com/azure/azure-resource-manager/templates/deployment-script-template) resource which requires an internal storage account — this can fail under such policies. If this happens, **all core resources are deployed successfully** (AI Search, OpenAI, Foundry project, Blob Storage, RBAC); only the sample data and knowledge base setup is missing.
+> **Model Quota or Capacity Errors (April 2026):** If your deployment fails with `ServiceModelDeprecated` (for `gpt-4o-mini`), `InsufficientResourcesAvailable`, or `InsufficientQuota`, this is due to ongoing Azure OpenAI model transitions and high demand in US regions. 
+> - **Workaround Example:** In our testing (April 2026), we bypassed this by changing the deployment region to a less saturated one (e.g., `swedencentral`) and changing the Chat Model Name in the parameters to `gpt-4o` to fit within our available limits. Your exact workaround will depend on your subscription's active quota limits.
 >
-> You can seed the data manually using either of these alternatives:
+> **Storage Access Errors:** Some Azure tenants enforce policies that block key-based access on storage accounts. This can cause the **data seeding script** to fail while all other resources deploy successfully. If this happens, your Azure resources are fully deployed — only the sample data and knowledge base setup is missing. You can seed the data manually using either of these alternatives:
 >
 > 1. **Run the Episode 1 cookbook**: Open the [Episode 1 cookbook](../1-Foundry-IQ-Unlocking-Knowledge-for-Agents/cookbook/) and run it end-to-end — it indexes the same NASA "Earth at Night" data and creates the knowledge source and knowledge base.
 > 2. **Seed via Foundry IQ UI**: Create an index in AI Search manually using the [NASA Earth at Night dataset](https://raw.githubusercontent.com/Azure-Samples/azure-search-sample-data/main/nasa-e-book/earth-at-night-json/documents.json), then create a knowledge source and knowledge base pointing to it through the Foundry IQ portal.
@@ -50,7 +51,7 @@ AZURE_AI_SEARCH_CONNECTION_NAME=<searchConnectionName output>
 - **Azure Subscription** with permissions to create resources and assign roles
 - **Azure CLI** installed and configured ([Install guide](https://learn.microsoft.com/cli/azure/install-azure-cli))
 - **Python 3.10+** installed
-- A region that supports [agentic retrieval](https://learn.microsoft.com/azure/search/search-region-support) (default: `eastus2`)
+- A region that supports [agentic retrieval](https://learn.microsoft.com/azure/search/search-region-support) (default: `swedencentral`)
 
 ## 🚀 Quick Start
 
@@ -68,14 +69,14 @@ az login
 
 ```bash
 cd infra
-./deploy.sh -g "iq-series-rg" -l "eastus2"
+./deploy.sh -g "iq-series-rg" -l "swedencentral"
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
 cd infra
-.\deploy.ps1 -ResourceGroupName "iq-series-rg" -Location "eastus2"
+.\deploy.ps1 -ResourceGroupName "iq-series-rg" -Location "swedencentral"
 ```
 
 This will:
