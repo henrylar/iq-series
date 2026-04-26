@@ -70,6 +70,7 @@ az ad signed-in-user show --query id -o tsv
 ```
 
 - Customize the resource prefix, location, and SKUs as needed, then click **Review + create**
+  - Tip: Keep the **Resource Prefix** to 5 characters or fewer (e.g., `iqser`) to avoid Storage account name length limits.
 
 Once deployment completes, copy the **Azure AI Search endpoint** and **API key** from the deployment **Outputs** tab. You'll need them in the next step.
 
@@ -78,6 +79,7 @@ Once deployment completes, copy the **Azure AI Search endpoint** and **API key**
 > **Model Quota or Capacity Errors (April 2026):** If your deployment fails with `ServiceModelDeprecated` (for `gpt-4o-mini`), `InsufficientResourcesAvailable`, or `InsufficientQuota`, this is due to ongoing Azure OpenAI model transitions and high demand in US regions. 
 > - **Workaround Example:** In our testing (April 2026), we bypassed this by changing the deployment region to a less saturated one (e.g., `swedencentral`) and changing the Chat Model Name in the parameters to `gpt-4o` to fit within our available limits. Your exact workaround will depend on your subscription's active quota limits.
 >
+> **Storage account name length (name too long / invalid):** Storage account names are limited to 24 characters. This template builds the name as `<resourcePrefix> + 'stor' + <13-char unique suffix>`. If your prefix is long (e.g., `iqseries`), the final name can exceed 24 characters. Fix by shortening the Resource Prefix to ≤5 chars (e.g., `iqser`).
 > **Storage Access Errors:** Some Azure tenants enforce policies that block key-based access on storage accounts. This can cause the **data seeding script** to fail while all other resources (AI Search, OpenAI, Foundry project, etc.) deploy successfully. If this happens, your Azure resources are fully deployed — only the sample data and knowledge base setup is missing. You can seed the data manually using either of these alternatives:
 >
 > 1. **Run the Episode 1 cookbook**: Open the [Episode 1 cookbook](./1-Foundry-IQ-Unlocking-Knowledge-for-Agents/cookbook/) and run it end-to-end — it indexes the same NASA "Earth at Night" sample data to your AI Search and creates the knowledge source and knowledge base.

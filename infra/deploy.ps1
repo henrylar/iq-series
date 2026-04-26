@@ -9,7 +9,7 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$Location,
 
-    [string]$ResourcePrefix = "iqseries",
+    [string]$ResourcePrefix = "iqser",
 
     [string]$SearchSku = "standard"
 )

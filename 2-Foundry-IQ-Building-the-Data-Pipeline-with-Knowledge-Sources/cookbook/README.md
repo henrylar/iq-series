@@ -17,10 +17,17 @@ Deploy all required Azure resources with one click — this creates AI Search, A
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fhenrylar%2Fiq-series%2Fmain%2Finfra%2Fazuredeploy.json)
 
+Tip: Use a short Resource Prefix like `iqser` to avoid Storage account name limits.
+
 > **⚠️ Troubleshooting: Deployment script failed?**
 >
 > **Model Quota or Capacity Errors (April 2026):** If your deployment fails with `ServiceModelDeprecated` (for `gpt-4o-mini`), `InsufficientResourcesAvailable`, or `InsufficientQuota`, this is due to ongoing Azure OpenAI model transitions and high demand in US regions. 
 > - **Workaround Example:** In our testing (April 2026), we bypassed this by changing the deployment region to a less saturated one (e.g., `swedencentral`) and changing the Chat Model Name in the parameters to `gpt-4o` to fit within our available limits. Your exact workaround will depend on your subscription's active quota limits.
+>
+> **Storage account name length (name too long / invalid):** Azure Storage account names must be 3–24 lowercase alphanumeric characters. This template derives the storage account name as `<resourcePrefix> + 'stor' + <13-char unique suffix>`. If your `resourcePrefix` is long (for example, `iqseries`), the final name can exceed 24 characters and the deployment will fail.
+> - **Symptom:** Errors like "The storage account name is invalid or exceeds 24 characters" during deployment.
+> - **Fix:** Shorten `Resource Prefix` to 5 characters or fewer (for example, `iqser`) in the Portal parameter, or pass `-p iqser` to `infra/deploy.sh`, or set `-ResourcePrefix "iqser"` in `infra/deploy.ps1`.
+> - **Why this works:** Using a 5-character prefix ensures `prefix + 'stor' + 13` stays within the 24-character limit.
 >
 > **Storage Access Errors:** Some Azure tenants enforce policies that block key-based access on storage accounts. This can cause the **data seeding script** to fail while all other resources deploy successfully. If this happens, your Azure resources are fully deployed — only the sample data and knowledge base setup is missing. You can seed the data manually using either of these alternatives:
 >
