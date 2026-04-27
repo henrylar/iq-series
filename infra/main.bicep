@@ -50,6 +50,24 @@ param chatModelVersion string = '2024-11-20'
 @maxValue(200)
 param chatModelCapacity int = 30
 
+@description('Deploy Azure OpenAI service')
+param deployOpenAI bool = true
+
+@description('Deploy AI Services (Foundry) resource')
+param deployAIServices bool = true
+
+@description('Deploy Foundry project (ignored if deployAIServices=false)')
+param deployFoundryProject bool = true
+
+@description('Deploy Azure OpenAI model deployments')
+param deployOpenAIDeployments bool = true
+
+@description('Deploy AI Services (Foundry) model deployments')
+param deployAIServicesDeployments bool = true
+
+@description('Create AI Search connection inside the Foundry project')
+param deploySearchConnection bool = true
+
 // -----------------------------------------------
 // Variables
 // -----------------------------------------------
@@ -114,7 +132,7 @@ resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
 // AZURE OPENAI SERVICE
 // ===============================================
 
-resource openAiService 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = {
+resource openAiService 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' = if (deployOpenAI) {
   name: names.openAi
   location: location
   sku: {
@@ -138,7 +156,7 @@ resource openAiService 'Microsoft.CognitiveServices/accounts@2023-10-01-preview'
 // AI SERVICES (FOUNDRY)
 // ===============================================
 
-resource aiServices 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
+resource aiServices 'Microsoft.CognitiveServices/accounts@2025-06-01' = if (deployAIServices) {
   name: names.aiServices
   location: location
   sku: {
@@ -163,7 +181,7 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2025-06-01' = {
 // FOUNDRY PROJECT
 // ===============================================
 
-resource project 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = {
+resource project 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = if (deployAIServices && deployFoundryProject) {
   parent: aiServices
   name: names.project
   location: location
@@ -180,7 +198,7 @@ resource project 'Microsoft.CognitiveServices/accounts/projects@2025-06-01' = {
 // AI SEARCH CONNECTION (Project → AI Search)
 // ===============================================
 
-resource searchConnection 'Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01' = {
+resource searchConnection 'Microsoft.CognitiveServices/accounts/projects/connections@2025-06-01' = if (deployAIServices && deployFoundryProject && deploySearchConnection) {
   parent: project
   name: names.searchConnection
   properties: {
@@ -231,7 +249,7 @@ resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/container
 // MODEL DEPLOYMENTS
 // ===============================================
 
-resource embeddingDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
+resource embeddingDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = if (deployOpenAI && deployOpenAIDeployments) {
   parent: openAiService
   name: names.embeddingDeployment
   properties: {
@@ -248,7 +266,7 @@ resource embeddingDeployment 'Microsoft.CognitiveServices/accounts/deployments@2
   }
 }
 
-resource chatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
+resource chatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = if (deployOpenAI && deployOpenAIDeployments) {
   parent: openAiService
   name: names.chatDeployment
   properties: {
@@ -274,7 +292,7 @@ resource chatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-1
 // appear in the Foundry project portal
 // ===============================================
 
-resource aiServicesEmbeddingDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
+resource aiServicesEmbeddingDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = if (deployAIServices && deployAIServicesDeployments) {
   parent: aiServices
   name: names.embeddingDeployment
   properties: {
@@ -291,7 +309,7 @@ resource aiServicesEmbeddingDeployment 'Microsoft.CognitiveServices/accounts/dep
   }
 }
 
-resource aiServicesChatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = {
+resource aiServicesChatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-10-01-preview' = if (deployAIServices && deployAIServicesDeployments) {
   parent: aiServices
   name: names.chatDeployment
   properties: {
@@ -316,7 +334,7 @@ resource aiServicesChatDeployment 'Microsoft.CognitiveServices/accounts/deployme
 // (AI Search managed identity → OpenAI & AI Services)
 // ===============================================
 
-resource searchToOpenAI_CogServicesUser 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource searchToOpenAI_CogServicesUser 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployOpenAI) {
   name: guid(subscription().id, searchService.name, roles.cognitiveServicesOpenAIUser)
   properties: {
     principalId: searchService.identity.principalId
@@ -325,7 +343,7 @@ resource searchToOpenAI_CogServicesUser 'Microsoft.Authorization/roleAssignments
   }
 }
 
-resource searchToAIServices_CogServicesUser 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource searchToAIServices_CogServicesUser 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployAIServices) {
   name: guid(subscription().id, searchService.name, roles.cognitiveServicesUser)
   properties: {
     principalId: searchService.identity.principalId
@@ -372,7 +390,7 @@ resource userRole_searchIndexContributor 'Microsoft.Authorization/roleAssignment
 }
 
 // Cognitive Services Contributor (OpenAI)
-resource userRole_openAiContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource userRole_openAiContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployOpenAI) {
   name: guid(resourceGroup().id, openAiService.name, userObjectId, roles.cognitiveServicesContributor)
   scope: openAiService
   properties: {
@@ -383,7 +401,7 @@ resource userRole_openAiContributor 'Microsoft.Authorization/roleAssignments@202
 }
 
 // Cognitive Services Contributor (AI Services / Foundry)
-resource userRole_aiServicesContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource userRole_aiServicesContributor 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployAIServices) {
   name: guid(resourceGroup().id, aiServices.name, userObjectId, roles.cognitiveServicesContributor)
   scope: aiServices
   properties: {
@@ -443,7 +461,7 @@ resource seedRole_searchIndexContributor 'Microsoft.Authorization/roleAssignment
 
 // Grant the seed identity Cognitive Services User on the OpenAI service
 // (required for knowledge base model validation)
-resource seedRole_cogServicesUser 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (seedData) {
+resource seedRole_cogServicesUser 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (seedData && deployOpenAI) {
   name: guid(resourceGroup().id, openAiService.name, 'seed', roles.cognitiveServicesUser)
   scope: openAiService
   properties: {
@@ -453,7 +471,7 @@ resource seedRole_cogServicesUser 'Microsoft.Authorization/roleAssignments@2022-
   }
 }
 
-resource seedDataScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = if (seedData) {
+resource seedDataScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = if (seedData && deployOpenAI && deployOpenAIDeployments) {
   name: '${resourcePrefix}-seed-data'
   location: location
   kind: 'AzureCLI'
@@ -499,31 +517,31 @@ output searchEndpoint string = 'https://${searchService.name}.search.windows.net
 output searchApiKey string = searchService.listAdminKeys().primaryKey
 
 @description('Azure OpenAI endpoint')
-output openAiEndpoint string = openAiService.properties.endpoint
+output openAiEndpoint string = deployOpenAI ? openAiService.properties.endpoint : ''
 
 @description('AI Services endpoint')
-output aiServicesEndpoint string = aiServices.properties.endpoint
+output aiServicesEndpoint string = deployAIServices ? aiServices.properties.endpoint : ''
 
 @description('AI Services name')
-output aiServicesName string = aiServices.name
+output aiServicesName string = deployAIServices ? aiServices.name : ''
 
 @description('Embedding deployment name')
-output embeddingDeploymentName string = embeddingDeployment.name
+output embeddingDeploymentName string = (deployOpenAI && deployOpenAIDeployments) ? embeddingDeployment.name : ''
 
 @description('Chat deployment name')
-output chatDeploymentName string = chatDeployment.name
+output chatDeploymentName string = (deployOpenAI && deployOpenAIDeployments) ? chatDeployment.name : ''
 
 @description('Search service name')
 output searchServiceName string = searchService.name
 
 @description('OpenAI service name')
-output openAiServiceName string = openAiService.name
+output openAiServiceName string = deployOpenAI ? openAiService.name : ''
 
 @description('Foundry project endpoint')
-output foundryProjectEndpoint string = 'https://${names.aiServices}.services.ai.azure.com/api/projects/${project.name}'
+output foundryProjectEndpoint string = (deployAIServices && deployFoundryProject) ? 'https://${names.aiServices}.services.ai.azure.com/api/projects/${project.name}' : ''
 
 @description('AI Search connection name (use in .env)')
-output searchConnectionName string = searchConnection.name
+output searchConnectionName string = (deployAIServices && deployFoundryProject && deploySearchConnection) ? searchConnection.name : ''
 
 @description('Blob Storage connection string (use as BLOB_CONNECTION_STRING in .env)')
 output blobConnectionString string = 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${storageAccount.listKeys().keys[0].value};EndpointSuffix=${environment().suffixes.storage}'

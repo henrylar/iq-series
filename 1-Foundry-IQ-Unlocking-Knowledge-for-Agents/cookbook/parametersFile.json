@@ -38,6 +38,24 @@
     "chatModelCapacity": {
       "value": 30
     },
+    "deployOpenAI": {
+      "value": true
+    },
+    "deployOpenAIDeployments": {
+      "value": true
+    },
+    "deployAIServices": {
+      "value": true
+    },
+    "deployFoundryProject": {
+      "value": true
+    },
+    "deployAIServicesDeployments": {
+      "value": true
+    },
+    "deploySearchConnection": {
+      "value": true
+    },
     "seedData": {
       "value": true
     }

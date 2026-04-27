@@ -111,6 +111,36 @@
         "description": "Chat model capacity (1K TPM per unit)"
       }
     },
+    "deployOpenAI": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": { "description": "Deploy Azure OpenAI service" }
+    },
+    "deployAIServices": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": { "description": "Deploy AI Services (Foundry) resource" }
+    },
+    "deployFoundryProject": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": { "description": "Deploy Foundry project (ignored if deployAIServices=false)" }
+    },
+    "deployOpenAIDeployments": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": { "description": "Deploy Azure OpenAI model deployments" }
+    },
+    "deployAIServicesDeployments": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": { "description": "Deploy AI Services (Foundry) model deployments" }
+    },
+    "deploySearchConnection": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": { "description": "Create AI Search connection inside the Foundry project" }
+    },
     "seedData": {
       "type": "bool",
       "defaultValue": true,
@@ -170,6 +200,7 @@
       }
     },
     {
+      "condition": "[parameters('deployOpenAI')]",
       "type": "Microsoft.CognitiveServices/accounts",
       "apiVersion": "2023-10-01-preview",
       "name": "[variables('names').openAi]",
@@ -191,6 +222,7 @@
       }
     },
     {
+      "condition": "[parameters('deployAIServices')]",
       "type": "Microsoft.CognitiveServices/accounts",
       "apiVersion": "2025-06-01",
       "name": "[variables('names').aiServices]",
@@ -213,6 +245,7 @@
       }
     },
     {
+      "condition": "[and(parameters('deployAIServices'), parameters('deployFoundryProject'))]",
       "type": "Microsoft.CognitiveServices/accounts/projects",
       "apiVersion": "2025-06-01",
       "name": "[format('{0}/{1}', variables('names').aiServices, variables('names').project)]",
@@ -229,6 +262,7 @@
       ]
     },
     {
+      "condition": "[and(parameters('deployAIServices'), parameters('deployFoundryProject'), parameters('deploySearchConnection'))]",
       "type": "Microsoft.CognitiveServices/accounts/projects/connections",
       "apiVersion": "2025-06-01",
       "name": "[format('{0}/{1}/{2}', variables('names').aiServices, variables('names').project, variables('names').searchConnection)]",
@@ -283,6 +317,7 @@
       ]
     },
     {
+      "condition": "[and(parameters('deployOpenAI'), parameters('deployOpenAIDeployments'))]",
       "type": "Microsoft.CognitiveServices/accounts/deployments",
       "apiVersion": "2023-10-01-preview",
       "name": "[format('{0}/{1}', variables('names').openAi, variables('names').embeddingDeployment)]",
@@ -303,6 +338,7 @@
       ]
     },
     {
+      "condition": "[and(parameters('deployOpenAI'), parameters('deployOpenAIDeployments'))]",
       "type": "Microsoft.CognitiveServices/accounts/deployments",
       "apiVersion": "2023-10-01-preview",
       "name": "[format('{0}/{1}', variables('names').openAi, variables('names').chatDeployment)]",
@@ -324,6 +360,7 @@
       ]
     },
     {
+      "condition": "[and(parameters('deployAIServices'), parameters('deployAIServicesDeployments'))]",
       "type": "Microsoft.CognitiveServices/accounts/deployments",
       "apiVersion": "2023-10-01-preview",
       "name": "[format('{0}/{1}', variables('names').aiServices, variables('names').embeddingDeployment)]",
@@ -344,6 +381,7 @@
       ]
     },
     {
+      "condition": "[and(parameters('deployAIServices'), parameters('deployAIServicesDeployments'))]",
       "type": "Microsoft.CognitiveServices/accounts/deployments",
       "apiVersion": "2023-10-01-preview",
       "name": "[format('{0}/{1}', variables('names').aiServices, variables('names').chatDeployment)]",
@@ -365,6 +403,7 @@
       ]
     },
     {
+      "condition": "[parameters('deployOpenAI')]",
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "name": "[guid(subscription().id, variables('names').search, variables('roles').cognitiveServicesOpenAIUser)]",
@@ -378,6 +417,7 @@
       ]
     },
     {
+      "condition": "[parameters('deployAIServices')]",
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "name": "[guid(subscription().id, variables('names').search, variables('roles').cognitiveServicesUser)]",
@@ -433,6 +473,7 @@
       ]
     },
     {
+      "condition": "[parameters('deployOpenAI')]",
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "scope": "[format('Microsoft.CognitiveServices/accounts/{0}', variables('names').openAi)]",
@@ -447,6 +488,7 @@
       ]
     },
     {
+      "condition": "[parameters('deployAIServices')]",
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "scope": "[format('Microsoft.CognitiveServices/accounts/{0}', variables('names').aiServices)]",
@@ -514,7 +556,7 @@
       ]
     },
     {
-      "condition": "[parameters('seedData')]",
+      "condition": "[and(parameters('seedData'), parameters('deployOpenAI'))]",
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "scope": "[format('Microsoft.CognitiveServices/accounts/{0}', variables('names').openAi)]",
@@ -530,7 +572,7 @@
       ]
     },
     {
-      "condition": "[parameters('seedData')]",
+      "condition": "[and(parameters('seedData'), parameters('deployOpenAI'), parameters('deployOpenAIDeployments'))]",
       "type": "Microsoft.Resources/deploymentScripts",
       "apiVersion": "2023-08-01",
       "name": "[format('{0}-seed-data', parameters('resourcePrefix'))]",
@@ -608,35 +650,35 @@
       "metadata": {
         "description": "Azure OpenAI endpoint"
       },
-      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('names').openAi), '2023-10-01-preview').endpoint]"
+      "value": "[if(parameters('deployOpenAI'), reference(resourceId('Microsoft.CognitiveServices/accounts', variables('names').openAi), '2023-10-01-preview').endpoint, '')]"
     },
     "aiServicesEndpoint": {
       "type": "string",
       "metadata": {
         "description": "AI Services endpoint"
       },
-      "value": "[reference(resourceId('Microsoft.CognitiveServices/accounts', variables('names').aiServices), '2025-06-01').endpoint]"
+      "value": "[if(parameters('deployAIServices'), reference(resourceId('Microsoft.CognitiveServices/accounts', variables('names').aiServices), '2025-06-01').endpoint, '')]"
     },
     "aiServicesName": {
       "type": "string",
       "metadata": {
         "description": "AI Services name"
       },
-      "value": "[variables('names').aiServices]"
+      "value": "[if(parameters('deployAIServices'), variables('names').aiServices, '')]"
     },
     "embeddingDeploymentName": {
       "type": "string",
       "metadata": {
         "description": "Embedding deployment name"
       },
-      "value": "[variables('names').embeddingDeployment]"
+      "value": "[if(and(parameters('deployOpenAI'), parameters('deployOpenAIDeployments')), variables('names').embeddingDeployment, '')]"
     },
     "chatDeploymentName": {
       "type": "string",
       "metadata": {
         "description": "Chat deployment name"
       },
-      "value": "[variables('names').chatDeployment]"
+      "value": "[if(and(parameters('deployOpenAI'), parameters('deployOpenAIDeployments')), variables('names').chatDeployment, '')]"
     },
     "searchServiceName": {
       "type": "string",
@@ -650,21 +692,21 @@
       "metadata": {
         "description": "OpenAI service name"
       },
-      "value": "[variables('names').openAi]"
+      "value": "[if(parameters('deployOpenAI'), variables('names').openAi, '')]"
     },
     "foundryProjectEndpoint": {
       "type": "string",
       "metadata": {
         "description": "Foundry project endpoint"
       },
-      "value": "[format('https://{0}.services.ai.azure.com/api/projects/{1}', variables('names').aiServices, variables('names').project)]"
+      "value": "[if(and(parameters('deployAIServices'), parameters('deployFoundryProject')), format('https://{0}.services.ai.azure.com/api/projects/{1}', variables('names').aiServices, variables('names').project), '')]"
     },
     "searchConnectionName": {
       "type": "string",
       "metadata": {
         "description": "AI Search connection name (use in .env)"
       },
-      "value": "[variables('names').searchConnection]"
+      "value": "[if(and(parameters('deployAIServices'), parameters('deployFoundryProject'), parameters('deploySearchConnection')), variables('names').searchConnection, '')]"
     },
     "blobConnectionString": {
       "type": "string",

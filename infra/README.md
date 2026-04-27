@@ -137,11 +137,45 @@ Delete all resources to avoid ongoing charges:
 az group delete --name iq-series-rg --yes --no-wait
 ```
 
+## Reuse an existing Foundry/OpenAI (Ep2/Ep3)
+
+If you've already deployed Episode 1 and want to deploy Episode 2 or 3 without creating additional Azure OpenAI or AI Services (Foundry) resources (e.g., due to quota), the template exposes toggles to skip those pieces and deploy only Search, Storage, RBAC, and outputs.
+
+Toggles (all default `true` to preserve Ep1 behavior):
+
+| Parameter | Effect when set to `false` |
+|-----------|-----------------------------|
+| `deployOpenAI` | Skip the Azure OpenAI account |
+| `deployOpenAIDeployments` | Skip Azure OpenAI model deployments |
+| `deployAIServices` | Skip the AI Services (Foundry) account |
+| `deployFoundryProject` | Skip the Foundry project (requires `deployAIServices=false` or true) |
+| `deployAIServicesDeployments` | Skip model deployments on the Foundry account |
+| `deploySearchConnection` | Skip creating the project → Search connection |
+| `seedData` | Skip the data seeding script (requires OpenAI to be present) |
+
+Preset parameters file: `main.reuse-foundry.parameters.json`.
+
+CLI (Ep2 or Ep3):
+
+```bash
+az deployment group create \
+  -g rg-henrylar-iq-ep3-knowledge-sc \
+  -f infra/azuredeploy.json \
+  -p @infra/main.reuse-foundry.parameters.json \
+  -p userObjectId=<your-object-id>
+```
+
+Portal ("Deploy to Azure"): set the above toggles to `false` in the parameters form (and `seedData=false`).
+
+After deployment, link the new Search service to your existing Ep1 Foundry project using `infra/scripts/link-foundry-connections.sh`, then update the episode's `cookbook/.env` with the new `SEARCH_ENDPOINT` (and `BLOB_CONNECTION_STRING` / `BLOB_CONTAINER_NAME` for Ep2).
+
 ## 📁 Files
 
 | File | Description |
 |------|-------------|
 | `main.bicep` | Bicep template defining all Azure resources |
 | `main.parameters.json` | Default parameter values |
+| `main.reuse-foundry.parameters.json` | Preset to skip OpenAI/Foundry for Ep2/Ep3 |
 | `deploy.sh` | Deployment script for macOS/Linux |
 | `deploy.ps1` | Deployment script for Windows PowerShell |
+| `scripts/link-foundry-connections.sh` | Links new Search services to the Ep1 Foundry project |
