@@ -33,10 +33,10 @@ SEARCH_ENDPOINT=<searchEndpoint output>
 AOAI_ENDPOINT=<openAiEndpoint output>
 AOAI_EMBEDDING_MODEL=text-embedding-3-large
 AOAI_EMBEDDING_DEPLOYMENT=text-embedding-3-large
-AOAI_GPT_MODEL=gpt-5.4-mini
-AOAI_GPT_DEPLOYMENT=gpt-5.4-mini
+AOAI_GPT_MODEL=gpt-4o
+AOAI_GPT_DEPLOYMENT=gpt-4o
 FOUNDRY_PROJECT_ENDPOINT=<foundryProjectEndpoint output>
-FOUNDRY_MODEL_DEPLOYMENT_NAME=gpt-5.4-mini
+FOUNDRY_MODEL_DEPLOYMENT_NAME=gpt-4o
 AZURE_AI_SEARCH_CONNECTION_NAME=<searchConnectionName output>
 ```
 
@@ -45,7 +45,7 @@ AZURE_AI_SEARCH_CONNECTION_NAME=<searchConnectionName output>
 | Resource | Purpose |
 |----------|---------|
 | **Azure AI Search** (Standard) | Vector search, semantic ranking, agentic retrieval |
-| **Azure OpenAI** | `text-embedding-3-large` + `gpt-5.4-mini` model deployments |
+| **Azure OpenAI** | `text-embedding-3-large` + `gpt-4o` model deployments |
 | **Azure AI Services** | Foundry resource with project management enabled |
 | **Foundry Project** | Project for running the IQ Series cookbooks |
 | **AI Search Connection** | Connects the Foundry project to your AI Search service |

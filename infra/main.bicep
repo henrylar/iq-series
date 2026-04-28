@@ -40,7 +40,7 @@ param embeddingModelVersion string = '1'
 param embeddingModelCapacity int = 30
 
 @description('Chat model name')
-param chatModelName string = 'gpt-5.4-mini'
+param chatModelName string = 'gpt-4o'
 
 @description('Chat model version')
 param chatModelVersion string = '2026-03-17'
@@ -83,7 +83,7 @@ var names = {
   storage: take('${toLower(resourcePrefix)}st${uniqueSuffix}', 24)
   blobContainer: 'product-manuals'
   embeddingDeployment: 'text-embedding-3-large'
-  chatDeployment: 'gpt-5.4-mini'
+  chatDeployment: 'gpt-4o'
 }
 
 // -----------------------------------------------

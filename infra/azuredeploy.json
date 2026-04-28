@@ -90,7 +90,7 @@
     },
     "chatModelName": {
       "type": "string",
-      "defaultValue": "gpt-5.4-mini",
+      "defaultValue": "gpt-4o",
       "metadata": {
         "description": "Chat model name"
       }
@@ -161,7 +161,7 @@
       "storage": "[format('{0}stor{1}', parameters('resourcePrefix'), variables('uniqueSuffix'))]",
       "blobContainer": "product-manuals",
       "embeddingDeployment": "text-embedding-3-large",
-      "chatDeployment": "gpt-5.4-mini"
+      "chatDeployment": "gpt-4o"
     },
     "roles": {
       "searchServiceContributor": "7ca78c08-252a-4471-8644-bb5ff32d4ba0",
