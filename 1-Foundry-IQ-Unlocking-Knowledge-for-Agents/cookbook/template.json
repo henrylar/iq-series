@@ -24,7 +24,7 @@
     },
     "location": {
       "type": "string",
-      "defaultValue": "swedencentral",
+      "defaultValue": "eastus2",
       "metadata": {
         "description": "Azure region — must support agentic retrieval (see https://learn.microsoft.com/azure/search/search-region-support)"
       }
@@ -90,14 +90,14 @@
     },
     "chatModelName": {
       "type": "string",
-      "defaultValue": "gpt-4o",
+      "defaultValue": "gpt-5.4-mini",
       "metadata": {
         "description": "Chat model name"
       }
     },
     "chatModelVersion": {
       "type": "string",
-      "defaultValue": "2024-11-20",
+      "defaultValue": "2026-03-17",
       "metadata": {
         "description": "Chat model version"
       }
@@ -161,7 +161,7 @@
       "storage": "[format('{0}stor{1}', parameters('resourcePrefix'), variables('uniqueSuffix'))]",
       "blobContainer": "product-manuals",
       "embeddingDeployment": "text-embedding-3-large",
-      "chatDeployment": "gpt-4o"
+      "chatDeployment": "gpt-5.4-mini"
     },
     "roles": {
       "searchServiceContributor": "7ca78c08-252a-4471-8644-bb5ff32d4ba0",
@@ -346,12 +346,12 @@
         "model": {
           "format": "OpenAI",
           "name": "[parameters('chatModelName')]",
-          "version": "2024-11-20"
+          "version": "2026-03-17"
         },
         "raiPolicyName": "Microsoft.Default"
       },
       "sku": {
-        "name": "Standard",
+        "name": "GlobalStandard",
         "capacity": "[parameters('chatModelCapacity')]"
       },
       "dependsOn": [
@@ -389,12 +389,12 @@
         "model": {
           "format": "OpenAI",
           "name": "[parameters('chatModelName')]",
-          "version": "2024-11-20"
+          "version": "2026-03-17"
         },
         "raiPolicyName": "Microsoft.Default"
       },
       "sku": {
-        "name": "Standard",
+        "name": "GlobalStandard",
         "capacity": "[parameters('chatModelCapacity')]"
       },
       "dependsOn": [

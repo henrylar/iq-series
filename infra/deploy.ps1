@@ -100,10 +100,10 @@ SEARCH_ENDPOINT=$searchEndpoint
 AOAI_ENDPOINT=$aoaiEndpoint
 AOAI_EMBEDDING_MODEL=text-embedding-3-large
 AOAI_EMBEDDING_DEPLOYMENT=$embeddingDeployment
-AOAI_GPT_MODEL=gpt-4o-mini
+AOAI_GPT_MODEL=gpt-5.4-mini
 AOAI_GPT_DEPLOYMENT=$chatDeployment
 FOUNDRY_PROJECT_ENDPOINT=$foundryProjectEndpoint
-FOUNDRY_MODEL_DEPLOYMENT_NAME=gpt-4o-mini
+FOUNDRY_MODEL_DEPLOYMENT_NAME=gpt-5.4-mini
 AZURE_AI_SEARCH_CONNECTION_NAME=$searchConnectionName
 "@
 

@@ -7,7 +7,7 @@ This folder contains the hands-on cookbook for Episode 2 of The IQ Series.
 - **Azure Subscription** with permissions to create resources and assign roles
 - **Azure CLI** installed and configured ([Install guide](https://learn.microsoft.com/cli/azure/install-azure-cli))
 - **Python 3.10+** installed
-- A region that supports [agentic retrieval](https://learn.microsoft.com/azure/search/search-region-support) (default: `swedencentral`)
+- A region that supports [agentic retrieval](https://learn.microsoft.com/azure/search/search-region-support) (default: `eastus2`)
 
 ## 🚀 Deploy Azure Resources
 
@@ -22,7 +22,7 @@ Tip: Use a short Resource Prefix like `iqser` to avoid Storage account name limi
 > **⚠️ Troubleshooting: Deployment script failed?**
 >
 > **Model Quota or Capacity Errors (April 2026):** If your deployment fails with `ServiceModelDeprecated` (for `gpt-4o-mini`), `InsufficientResourcesAvailable`, or `InsufficientQuota`, this is due to ongoing Azure OpenAI model transitions and high demand in US regions. 
-> - **Workaround Example:** In our testing (April 2026), we bypassed this by changing the deployment region to a less saturated one (e.g., `swedencentral`) and changing the Chat Model Name in the parameters to `gpt-4o` to fit within our available limits. Your exact workaround will depend on your subscription's active quota limits.
+> - **Workaround Example:** In our testing (April 2026), we bypassed this by changing the deployment region to a less saturated one (e.g., `eastus2`) and changing the Chat Model Name in the parameters to `gpt-4o` to fit within our available limits. Your exact workaround will depend on your subscription's active quota limits.
 >
 > **Storage account name length (name too long / invalid):** Azure Storage account names must be 3–24 lowercase alphanumeric characters. This template derives the storage account name as `<resourcePrefix> + 'stor' + <13-char unique suffix>`. If your `resourcePrefix` is long (for example, `iqseries`), the final name can exceed 24 characters and the deployment will fail.
 > - **Symptom:** Errors like "The storage account name is invalid or exceeds 24 characters" during deployment.
@@ -55,8 +55,8 @@ SEARCH_ENDPOINT=https://<your-search-service>.search.windows.net
 AOAI_ENDPOINT=https://<your-openai-resource>.openai.azure.com
 AOAI_EMBEDDING_MODEL=text-embedding-3-large
 AOAI_EMBEDDING_DEPLOYMENT=text-embedding-3-large
-AOAI_GPT_MODEL=gpt-4o
-AOAI_GPT_DEPLOYMENT=gpt-4o
+AOAI_GPT_MODEL=gpt-5.4-mini
+AOAI_GPT_DEPLOYMENT=gpt-5.4-mini
 BLOB_CONNECTION_STRING=<your-blob-connection-string>
 BLOB_CONTAINER_NAME=<your-container-name>
 ```

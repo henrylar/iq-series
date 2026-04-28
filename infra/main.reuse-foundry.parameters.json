@@ -9,7 +9,7 @@
       "value": "iqser"
     },
     "location": {
-      "value": "swedencentral"
+      "value": "eastus2"
     },
     "deployOpenAI": {
       "value": false

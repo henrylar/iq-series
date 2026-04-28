@@ -13,7 +13,7 @@ param userObjectId string
 param resourcePrefix string = 'iqser'
 
 @description('Azure region — must support agentic retrieval (see https://learn.microsoft.com/azure/search/search-region-support)')
-param location string = 'swedencentral'
+param location string = 'eastus2'
 
 @description('AI Search SKU')
 @allowed(['basic', 'standard', 'standard2', 'standard3'])
@@ -40,10 +40,10 @@ param embeddingModelVersion string = '1'
 param embeddingModelCapacity int = 30
 
 @description('Chat model name')
-param chatModelName string = 'gpt-4o'
+param chatModelName string = 'gpt-5.4-mini'
 
 @description('Chat model version')
-param chatModelVersion string = '2024-11-20'
+param chatModelVersion string = '2026-03-17'
 
 @description('Chat model capacity (1K TPM per unit)')
 @minValue(1)
@@ -83,7 +83,7 @@ var names = {
   storage: take('${toLower(resourcePrefix)}st${uniqueSuffix}', 24)
   blobContainer: 'product-manuals'
   embeddingDeployment: 'text-embedding-3-large'
-  chatDeployment: 'gpt-4o'
+  chatDeployment: 'gpt-5.4-mini'
 }
 
 // -----------------------------------------------
@@ -273,12 +273,12 @@ resource chatDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-1
     model: {
       format: 'OpenAI'
       name: chatModelName
-      version: '2024-11-20'
+      version: chatModelVersion
     }
     raiPolicyName: 'Microsoft.Default'
   }
   sku: {
-    name: 'Standard'
+    name: 'GlobalStandard'
     capacity: chatModelCapacity
   }
   dependsOn: [
@@ -316,12 +316,12 @@ resource aiServicesChatDeployment 'Microsoft.CognitiveServices/accounts/deployme
     model: {
       format: 'OpenAI'
       name: chatModelName
-      version: '2024-11-20'
+      version: chatModelVersion
     }
     raiPolicyName: 'Microsoft.Default'
   }
   sku: {
-    name: 'Standard'
+    name: 'GlobalStandard'
     capacity: chatModelCapacity
   }
   dependsOn: [

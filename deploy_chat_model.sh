@@ -11,16 +11,16 @@ if [ -z "$OPENAI_ACCOUNT" ]; then
 fi
 
 echo "Found OpenAI account: $OPENAI_ACCOUNT"
-echo "Deploying gpt-4o (2024-11-20) with 20K TPM..."
+echo "Deploying gpt-5.4-mini with 20K TPM..."
 
 az cognitiveservices account deployment create \
   -g "$RG_NAME" \
   -n "$OPENAI_ACCOUNT" \
-  --deployment-name "gpt-4o" \
-  --model-name "gpt-4o" \
-  --model-version "2024-11-20" \
+  --deployment-name "gpt-5.4-mini" \
+  --model-name "gpt-5.4-mini" \
+  --model-version "2026-03-17" \
   --model-format "OpenAI" \
-  --sku-name "Standard" \
+  --sku-name "GlobalStandard" \
   --sku-capacity 20
   
 echo "Deployment command completed."

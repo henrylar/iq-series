@@ -22,7 +22,7 @@ Tip: Use a short Resource Prefix like `iqser` to avoid Storage account name limi
 > **⚠️ Troubleshooting: Deployment script failed?**
 >
 > **Model Quota or Capacity Errors (April 2026):** If your deployment fails with `ServiceModelDeprecated` (for `gpt-4o-mini`), `InsufficientResourcesAvailable`, or `InsufficientQuota`, this is due to ongoing Azure OpenAI model transitions and high demand in US regions. 
-> - **Workaround Example:** In our testing (April 2026), we bypassed this by changing the deployment region to a less saturated one (e.g., `swedencentral`) and changing the Chat Model Name in the parameters to `gpt-4o` to fit within our available limits. Your exact workaround will depend on your subscription's active quota limits.
+> - **Workaround Example:** In our testing (April 2026), we bypassed this by changing the deployment region to a less saturated one (e.g., `eastus2`) and changing the Chat Model Name in the parameters to `gpt-4o` to fit within our available limits. Your exact workaround will depend on your subscription's active quota limits.
 >
 > **Storage account name length (name too long / invalid):** Azure Storage account names must be 3–24 lowercase alphanumeric characters. This template derives the storage account name as `<resourcePrefix> + 'stor' + <13-char unique suffix>`. If your `resourcePrefix` is long (for example, `iqseries`), the final name can exceed 24 characters and the deployment will fail.
 > - **Symptom:** Errors like "The storage account name is invalid or exceeds 24 characters" during deployment.
@@ -55,10 +55,10 @@ SEARCH_ENDPOINT=https://<your-search-service>.search.windows.net
 AOAI_ENDPOINT=https://<your-openai-resource>.openai.azure.com
 AOAI_EMBEDDING_MODEL=text-embedding-3-large
 AOAI_EMBEDDING_DEPLOYMENT=text-embedding-3-large
-AOAI_GPT_MODEL=gpt-4o
-AOAI_GPT_DEPLOYMENT=gpt-4o
+AOAI_GPT_MODEL=gpt-5.4-mini
+AOAI_GPT_DEPLOYMENT=gpt-5.4-mini
 FOUNDRY_PROJECT_ENDPOINT=https://<your-ai-services>.services.ai.azure.com/api/projects/<your-project>
-FOUNDRY_MODEL_DEPLOYMENT_NAME=gpt-4o
+FOUNDRY_MODEL_DEPLOYMENT_NAME=gpt-5.4-mini
 AZURE_AI_SEARCH_CONNECTION_NAME=iq-series-search-connection
 FOUNDRY_PROJECT_RESOURCE_ID=/subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.MachineLearningServices/workspaces/<workspace>/projects/<project>
 ```
