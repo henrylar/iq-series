@@ -2,9 +2,9 @@
   "servers": {
     "foundry-iq": {
       "type": "http",
-      "url": "https://<your-search-service>.search.windows.net/knowledgebases/earth-knowledge-base/mcp?api-version=2025-11-01-Preview",
+      "url": "https://iqser-search-wbmuq7qfehhz2.search.windows.net/knowledgebases/earth-knowledge-base/mcp?api-version=2025-11-01-Preview",
       "headers": {
-        "api-key": "<your-search-api-key>"
+        "api-key": "<YOUR_SEARCH_API_KEY>"
       }
     }
   }
